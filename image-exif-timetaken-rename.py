@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import os, sys, time
+import os, sys, time, datetime
+from dateutil.relativedelta import relativedelta
 from optparse import OptionParser, OptionGroup
 from PIL import Image
 import pathlib
@@ -23,14 +24,48 @@ def GetImageDate(fn):
     except IOError:
         print ("File %s not found" % fn)
     except TypeError:
-        print ("File $s exif data not found" % fn)
+        print ("File %s exif data not found" % fn)
+#%%
+def GetCompare(filedate, comparedate):
+    d = datetime.datetime.strptime(filedate,"%Y%m%d-%H%M%S").date()
+    c = datetime.datetime.strptime(comparedate,"%Y-%m-%d").date()
+    r = relativedelta(d,c)
+    if options.verbose: print ("%s %s %s" %(d,c,relativedelta(d,c)))
+    if abs(r.years) >= 2:
+        age = str(abs(r.years)) + " Years"
+    else:
+        if abs(r.years) >= 1:
+            age = str(abs(r.months) + 12) + " Months"
+        else:
+            if abs(r.months) >= 2:
+                age = str(abs(r.months)) + " Months"
+            else:
+                if abs(r.months) >= 1 or abs(r.days) >= 14:
+                    age = str(abs((d - c)).days//7) + " Weeks"
+                else:
+                    if abs(r.days) > 1:
+                        age = str(abs(r.days)) + " Days"
+                    elif abs(r.days) == 1:
+                        age = str(abs(r.days)) + " Day"
+                    elif abs(r.days) == 0:
+                        age = "Day " + str(abs(r.days))
+                    else:
+                        age = "error"
+    if r.years < 0 or r.months < 0 or r.days < 0:
+        age = "-" + age
+    return age
 #%%
 def GetNewImageName(image, prefix, append):
-    date = time.strftime(options.format,GetImageDate(image))
+    # The date-time string
+    datetime = time.strftime(options.format,GetImageDate(image))
+    if options.compare:
+        compare = GetCompare(datetime,options.compare)
+    # Add an index number to file incase more than 1 file as created in the same second
     for i in range(30):
-        temp = date
+        temp = datetime
         if options.prefix: temp = options.prefix + temp
         temp = temp + "-" + str(i)
+        if options.compare: temp = temp + " (" + compare + ")"
         if options.append: temp = temp + options.append
         if os.path.dirname(image):
             test = os.path.dirname(image) + os.sep + temp + os.path.splitext(image)[1].lower()
@@ -59,6 +94,7 @@ if __name__ == '__main__':
     epilog = "Rename image file with [prepend_]datetaken[_append].extension"
     parser = OptionParser(usage=usage, description=description, epilog=epilog, version=version)
     parser.add_option("-a", "--append", action="store", type="string", help="Append string to filename")
+    parser.add_option("-c", "--compare", action="store", type="string", help="Time differace to filename")
     parser.add_option("-f", "--format", action="store", type="string", help="Datetime Format", default="%Y%m%d-%H%M%S")
     parser.add_option("-p", "--prefix", action="store", type="string", help="Prefix string to filename")
     group = OptionGroup(parser, "Debug Options")
