@@ -1,15 +1,29 @@
+#!/usr/bin/env python3
+
 import os, sys, time
 from optparse import OptionParser, OptionGroup
 from PIL import Image
+import pathlib
+import piexif
+import pyheif
 
 __version__ = '0.1'
 
 #%%
-def GetImageDate(image):
+def GetImageDate(fn):
     try:
-        return time.strptime(Image.open(image)._getexif()[306],"%Y:%m:%d %H:%M:%S")
+        if pathlib.Path(fn).suffix.lower() == '.heic':
+            if options.verbose: print("Intput file is HEIC: %s" % fn) 
+            heif = pyheif.read_heif(fn)
+            for m in heif.metadata or []:
+                if m['type'] == 'Exif':
+                    heif_meta = piexif.load(m['data'])
+            return time.strptime(heif_meta['0th'][306].decode('utf-8'),"%Y:%m:%d %H:%M:%S")
+        return time.strptime(Image.open(fn)._getexif()[306],"%Y:%m:%d %H:%M:%S")
     except IOError:
-        print ("File %s not found" % image)
+        print ("File %s not found" % fn)
+    except TypeError:
+        print ("File $s exif data not found" % fn)
 #%%
 def GetNewImageName(image, prefix, append):
     date = time.strftime(options.format,GetImageDate(image))
@@ -18,7 +32,10 @@ def GetNewImageName(image, prefix, append):
         if options.prefix: temp = options.prefix + temp
         temp = temp + "-" + str(i)
         if options.append: temp = temp + options.append
-        test = os.path.dirname(image) + os.sep + temp + os.path.splitext(image)[1].lower()
+        if os.path.dirname(image):
+            test = os.path.dirname(image) + os.sep + temp + os.path.splitext(image)[1].lower()
+        else:
+            test = temp + os.path.splitext(image)[1].lower()
         if not os.path.isfile(test):
             newImage = test
             break
