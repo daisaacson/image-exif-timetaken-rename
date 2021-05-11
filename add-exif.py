@@ -13,7 +13,7 @@ try:
     exif_dict = piexif.load(img.info["exif"])
     exif_dict["0th"][306] = bytes(taken,"UTF-8")
     exif_bytes = piexif.dump(exif_dict)
-    img.save("new_" + fn, "jpeg", exif=exif_bytes)
+    img.save("new_" + fn, quality=100, subsampling=0, exif=exif_bytes)
 except KeyError:
     exif_dict = {"0th":{}}
     w, h = img.size
@@ -21,5 +21,5 @@ except KeyError:
     exif_dict["0th"][piexif.ImageIFD.YResolution] = (h, 1)
     exif_dict["0th"][306] = bytes(taken,"UTF-8")
     exif_bytes = piexif.dump(exif_dict)
-    img.save("new_" + fn, "jpeg", exif=exif_bytes)
+    img.save("new_" + fn, quality=100, subsampling=0, exif=exif_bytes)
 print ("exif: %s"%(exif_dict))
