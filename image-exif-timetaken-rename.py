@@ -28,14 +28,14 @@ def GetImageDate(fn):
             probe = ffmpeg.probe(fn)
             video_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'video'), None)
             creation_time = video_stream['tags']['creation_time'] + "GMT"
+            video_time = time.strptime(creation_time,"%Y-%m-%dT%H:%M:%S.000000Z%Z")
             if options.debug:
                 print("Creation Time %s" % creation_time)
                 g = datetime.datetime.fromtimestamp(time.mktime(time.strptime(creation_time,"%Y-%m-%dT%H:%M:%S.000000Z%Z")),tz=datetime.timezone.utc)
-                #g = time.strptime(creation_time,"%Y-%m-%dT%H:%M:%S.000000Z%Z")
                 c = time.localtime(time.mktime(time.strptime(creation_time,"%Y-%m-%dT%H:%M:%S.000000Z%Z")))
                 print("GMT Time %s" % str(g))
                 print("CDT Time %s" % str(c))
-            return g
+            return video_time
         return time.strptime(Image.open(fn)._getexif()[306],"%Y:%m:%d %H:%M:%S")
     except IOError:
         print ("File %s not found" % fn)
