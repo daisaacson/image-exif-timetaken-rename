@@ -1,3 +1,10 @@
+## Prep
+
+```bash
+sudo apt install python3-pip python3-dateutil python3-pil ffmpeg
+pip install piexif pyheif ffmpeg ffmpeg-python
+```
+
 Rename Images and Movies based on time media was created
 
 Movies are save to GMT, need to fix to localtime
