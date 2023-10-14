@@ -47,15 +47,15 @@ Get-ChildItem -Recurse -Include "*Day Care*" * | Foreach-Object {
 	}
 }
 
-# LINUX
-# All images are not oriented correctly
-newParentPath="~/d/Family"
-find . -name "*.heic" | while read i; do 
-	echo "$i"
-	fileHash=$(sha256sum "$i" | cut -f1 -d' ')
-	baseName=$(basename "${i}")
-	newFileName="${newParentPath}/${fileHash:0:2}/${fileHash:0:7}_${baseName}.jpg"
-	if [ ! -f "$newFileName" ]; then
-		heif-convert "${i}" "${newFileName}"
-	fi
-done
+## LINUX
+## All images are not oriented correctly
+#newParentPath="~/d/Family"
+#find . -name "*.heic" | while read i; do 
+#	echo "$i"
+#	fileHash=$(sha256sum "$i" | cut -f1 -d' ')
+#	baseName=$(basename "${i}")
+#	newFileName="${newParentPath}/${fileHash:0:2}/${fileHash:0:7}_${baseName}.jpg"
+#	if [ ! -f "$newFileName" ]; then
+#		heif-convert "${i}" "${newFileName}"
+#	fi
+#done
