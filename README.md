@@ -2,6 +2,7 @@
 
 ```bash
 sudo apt install python3-pip python3-dateutil python3-pil ffmpeg
+pip install --upgrade pip
 pip install piexif pyheif ffmpeg ffmpeg-python
 ```
 
