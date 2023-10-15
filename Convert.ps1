@@ -1,5 +1,5 @@
 # New Parent Path
-$newParentPath = "D:\Family"
+$newParentPath = "E:\Family"
 
 # Lets compress the Jpegs
 Get-ChildItem -Recurse -Include "*.jpg", "*.jpeg", "*.png" -Exclude "*Day Care*" * | Foreach-Object {
@@ -10,14 +10,14 @@ Get-ChildItem -Recurse -Include "*.jpg", "*.jpeg", "*.png" -Exclude "*Day Care*"
 		If ( -Not (Test-Path -PathType Container $(Split-Path $newFileName)) ) {
 			New-Item -ItemType Directory -Path $(Split-Path $newFileName) -Verbose
 		}
-		& \\nas\family\everyone\PortableApps\ffmpeg-n5.0-latest-win64-gpl-5.0\bin\ffmpeg.exe -i "$($_.fullname)" -c:v mjpeg -qmin 1 -q:v 1 "$newFileName"
+		& ffmpeg.exe -i "$($_.fullname)" -codec:v mjpeg -qscale:v 3 "$newFileName"
 	} else {
 		Write-Host -Foreground Yellow "Skipping: $($_.name)"
 	}
 }
 
-# Convert iPhone heic images to jpeg.  This currenlty fails and is in place in case it ever works in the future
-# See commented out LINUX bash script below
+## Convert iPhone heic images to jpeg.  This currenlty fails and is in place in case it ever works in the future
+## See commented out LINUX bash script below
 #Get-ChildItem -Recurse -Include "*.heic" * | Foreach-Object {
 #	$fileHash = (Get-FileHash -Algorithm SHA256 $_).Hash.ToLower()
 #	$newFileName = "$newParentPath\$($fileHash.Substring(0,2))\$($fileHash.Substring(0,7))_$($_.basename).jpg"
@@ -26,7 +26,7 @@ Get-ChildItem -Recurse -Include "*.jpg", "*.jpeg", "*.png" -Exclude "*Day Care*"
 #		If ( -Not (Test-Path -PathType Container $(Split-Path $newFileName)) ) {
 #			New-Item -ItemType Directory -Path $(Split-Path $newFileName) -Verbose
 #		}
-#		& \\nas\family\everyone\PortableApps\ffmpeg-n5.0-latest-win64-gpl-5.0\bin\ffmpeg.exe -i "$($_.fullname)" -c:v mjpeg -movflags qt-faststart -pix_fmt rgb48 "$($newFileName).tiff"
+#		& ffmpeg.exe -i "$($_.fullname)" -codec:v mjpeg -movflags -qscale:v 3 "$($newFileName).jpg"
 #	} else {
 #		Write-Host -Foreground Yellow "Skipping: $($_.name)"
 #	}
