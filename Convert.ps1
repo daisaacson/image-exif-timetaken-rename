@@ -49,7 +49,8 @@ Get-ChildItem -Recurse -Include "*Day Care*" * | Foreach-Object {
 
 ## LINUX
 ## All images are not oriented correctly
-#newParentPath="~/d/Family"
+## sudo apt-get install libheif1 libheif-examples
+#newParentPath="$HOME/d/Family"
 #find . -name "*.heic" | while read i; do 
 #	echo "$i"
 #	fileHash=$(sha256sum "$i" | cut -f1 -d' ')
