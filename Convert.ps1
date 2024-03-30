@@ -11,7 +11,7 @@ foreach ($file in $files) {
 	$prefix = "$($fileHash.Substring(0,8))_"
 	$newFileName = "$newParentPath\$($folder)\$($prefix)$($file.basename).jpg"
 
-	[int]$percentComplete = (($i+1)/$files.count)*100
+	[int]$percentComplete = [math]::floor((($i++)/$files.count)*100)
 
 	Write-Progress -Activity "Converting" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 
@@ -22,6 +22,7 @@ foreach ($file in $files) {
 		
 		switch -regex ($file) {
 			".*Day Care.*" {
+				Write-Progress -Activity "Copying" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 				# Copy Day Care photes, they are small, plus running them through ffmpeg causes the Aluratek Picture Frame to not show red colors
 				[void](Copy-Item -Destination $newFileName $file.fullname)
 				break
@@ -38,10 +39,8 @@ foreach ($file in $files) {
 			}
 		}
 	} else {
-		Write-Progress -Activity "Converting" -Status "$percentComplete%: Skipping $($file.basename)" -Id 0 -percentComplete $percentComplete
+		Write-Progress -Activity "Skipping" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 	}
-
-	$i++
 }
 
 ## LINUX
