@@ -1,6 +1,6 @@
 # New Parent Path
 $newParentPath = "E:\Family"
-$ffmpeg = "~\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg.Shared_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-6.1.1-full_build-shared\bin\ffmpeg.exe"
+$magick = "C:\Program Files\ImageMagick-7.1.1-Q16-HDRI\magick.exe"
 
 $files = Get-ChildItem -Recurse -File * 
 $i = 0
@@ -12,8 +12,6 @@ foreach ($file in $files) {
 	$newFileName = "$newParentPath\$($folder)\$($prefix)$($file.basename).jpg"
 
 	[int]$percentComplete = [math]::floor((($i++)/$files.count)*100)
-
-	Write-Progress -Activity "Converting" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 
 	if ( -Not (Test-Path $newFileName) ) {
 		If ( -Not (Test-Path -PathType Container $(Split-Path $newFileName)) ) {
@@ -27,14 +25,10 @@ foreach ($file in $files) {
 				[void](Copy-Item -Destination $newFileName $file.fullname)
 				break
 			}
-			"\.jp.?g$" {
+			"\.(jp.?g|heic)$" {
+				Write-Progress -Activity "Converting" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 				# Lets compress the Jpegs
-				& $ffmpeg -hide_banner -loglevel warning -i "$($file.fullname)" -update true -codec:v mjpeg -qscale:v 3 "$newFileName"
-				break
-			}
-			"\.heic$" {
-				# Convert iPhone heic images to jpeg.  This currenlty fails and is in place in case it ever works in the future
-				& $ffmpeg -hide_banner -loglevel warning -i "$($file.fullname)" -update true -codec:v mjpeg -movflags -qscale:v 3 "$($newFileName).jpg"
+				& $magick -quality 85% "$($file.fullname)" "$($newFileName)"
 				break
 			}
 		}
