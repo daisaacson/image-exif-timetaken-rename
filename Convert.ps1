@@ -20,7 +20,7 @@ foreach ($file in $files) {
 		
 		switch -regex ($file) {
 			".*Day Care.*" {
-				Write-Progress -Activity "Copying" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
+				Write-Progress -Activity "   Copying" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 				# Copy Day Care photes, they are small, plus running them through ffmpeg causes the Aluratek Picture Frame to not show red colors
 				[void](Copy-Item -Destination $newFileName $file.fullname)
 				break
@@ -28,12 +28,12 @@ foreach ($file in $files) {
 			"\.(jp.?g|heic)$" {
 				Write-Progress -Activity "Converting" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 				# Lets compress the Jpegs
-				& $magick -quality 85% "$($file.fullname)" "$($newFileName)"
+				& $magick -quality 92% -define jpeg:extent=1024kb "$($file.fullname)" "$($newFileName)"
 				break
 			}
 		}
 	} else {
-		Write-Progress -Activity "Skipping" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
+		Write-Progress -Activity "  Skipping" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
 	}
 }
 
