@@ -2,38 +2,44 @@
 $newParentPath = "E:\Family"
 $magick = "C:\Program Files\ImageMagick-7.1.1-Q16-HDRI\magick.exe"
 
-$files = Get-ChildItem -Recurse -File * 
+$files = Get-ChildItem -Recurse -File *.jpg, *.jpeg, *.png, *.heic
 $i = 0
 
 foreach ($file in $files) {
-	$fileHash = (Get-FileHash -Algorithm SHA256 $file).Hash.ToLower()
-	$folder = "$($fileHash.Substring(0,2))"
-	$prefix = "$($fileHash.Substring(0,8))_"
-	$newFileName = "$newParentPath\$($folder)\$($prefix)$($file.basename).jpg"
-
-	[int]$percentComplete = [math]::floor((($i++)/$files.count)*100)
-
-	if ( -Not (Test-Path $newFileName) ) {
-		If ( -Not (Test-Path -PathType Container $(Split-Path $newFileName)) ) {
-			[void](New-Item -ItemType Directory -Path $(Split-Path $newFileName))
-		}
-		
-		switch -regex ($file) {
-			".*Day Care.*" {
-				Write-Progress -Activity "   Copying" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
-				# Copy Day Care photes, they are small, plus running them through ffmpeg causes the Aluratek Picture Frame to not show red colors
-				[void](Copy-Item -Destination $newFileName $file.fullname)
-				break
+	try {
+		$fileHash = (Get-FileHash -Algorithm SHA256 $file).Hash.ToLower()
+		$folder = "$($fileHash.Substring(0,2))"
+		$prefix = "$($fileHash.Substring(0,8))_"
+		$newFileName = "$newParentPath\$($folder)\$($prefix)$($file.BaseName).jpg"
+	
+		[int]$percentComplete = [math]::floor((($i++)/$files.count)*100)
+	
+		if ( -Not (Test-Path $newFileName) ) {
+			If ( -Not (Test-Path -PathType Container $(Split-Path $newFileName)) ) {
+				[void](New-Item -ItemType Directory -Path $(Split-Path $newFileName))
 			}
-			"\.(jp.?g|heic)$" {
-				Write-Progress -Activity "Converting" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
-				# Lets compress the Jpegs
-				& $magick -quality 92% -define jpeg:extent=1024kb "$($file.fullname)" "$($newFileName)"
-				break
+			
+			switch -regex ($file) {
+				".*Day Care.*" {
+					Write-Progress -Activity "   Copying" -Status "$percentComplete%: $($file.BaseName)" -Id 0 -percentComplete $percentComplete
+					# Copy Day Care photes, they are small, plus running them through ffmpeg causes the Aluratek Picture Frame to not show red colors
+					[void](Copy-Item -Destination $newFileName $file.fullname)
+					break
+				}
+				"\.(jp.?g|png|heic)$" {
+					Write-Progress -Activity "Converting" -Status "$percentComplete%: $($file.BaseName)" -Id 0 -percentComplete $percentComplete
+					# Lets compress the Jpegs
+					& $magick -quality 92% -define jpeg:extent=512kb "$($file.FullName)" "$($newFileName)"
+					break
+				}
 			}
+		} else {
+			Write-Progress -Activity "  Skipping" -Status "$percentComplete%: $($file.BaseName)" -Id 0 -percentComplete $percentComplete
 		}
-	} else {
-		Write-Progress -Activity "  Skipping" -Status "$percentComplete%: $($file.basename)" -Id 0 -percentComplete $percentComplete
+	}
+	catch {
+		Write-Error -Message "File: $($file)`nError: $_"
+    	throw
 	}
 }
 
