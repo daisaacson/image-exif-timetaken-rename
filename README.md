@@ -15,9 +15,9 @@ Movies are save to GMT, need to fix to localtime
 Outputs file format is YYYYMMDD-HHMMSS-0.ext
 
 ```bash
-image-exif-timetaken-rename.py -c 2021-01-14 -p Ezra_ -a ' Day Care' -d new_fb923d81-9487-448a-9a20-da546660e467.jpg
+image-exif-timetaken-rename.py -c 2021-01-01 -p Kid_ -a ' Some Activity' -d new_fb923d81-9487-448a-9a20-da546660e467.jpg
 ```
-renames file to Ezra_20210630-163300-0 (5 Months) Day Care.jpg
+renames file to Kid_20210630-163300-0 (5 Months) Some Activity.jpg
 
 ## add-exif.py
 
@@ -32,6 +32,18 @@ add-exif.py fb923d81-9487-448a-9a20-da546660e467.jpg '2021:06:30 16:33:00'
 Filename: fb923d81-9487-448a-9a20-da546660e467.jpg
 exif: {'0th': {274: 1, 34665: 38, 306: b'2021:06:30 16:33:00'}, 'Exif': {40961: 1, 40962: 810, 40963: 1080, 36867: b'2021:06:30 16:33:00', 36868: b'2021:06:30 16:33:00'}, 'GPS': {}, 'Interop': {}, '1st': {}, 'thumbnail': None}
 ```
+
+## script
+
+
+```bash
+date="2023:08:01"; i=100; for p in a.jpg b.jpg c.jpg;do ~/GIT/image-exif-timetaken-rename/add-exif.py $p "${date} 12:30:${i:1:2}" && rm $p; ~/GIT/image-exif-timetaken-rename/image-exif-timetaken-rename.py -c 2021-01-01 -p Kid_ -a ' Some Activity' new_${p}; i=$((i+1)); done
+```
+
+Renames files
+* Kid_20230801-12:30:00-0 (2 Years) Some Activity.jpg
+* Kid_20230801-12:30:01-0 (2 Years) Some Activity.jpg
+* Kid_20230801-12:30:02-0 (2 Years) Some Activity.jpg
 
 ## fix-exif.py
 

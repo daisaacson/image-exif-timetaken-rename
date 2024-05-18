@@ -36,7 +36,7 @@ def GetImageDate(fn):
                 print("GMT Time %s" % str(g))
                 print("CDT Time %s" % str(c))
             return video_time
-        return time.strptime(Image.open(fn)._getexif()[306],"%Y:%m:%d %H:%M:%S")
+        return time.strptime(Image.open(fn)._getexif()[36867],"%Y:%m:%d %H:%M:%S")
     except IOError:
         print ("File %s not found" % fn)
     #except TypeError:
