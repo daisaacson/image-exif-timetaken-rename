@@ -96,7 +96,7 @@ def main(args):
     for image in args:
         if options.verbose: print("Intput file: %s" % image) 
         newImage = GetNewImageName(image, options.prefix, options.append)
-        if options.dry:
+        if options.dry or options.verbose:
             print("%s --> %s" % (image, newImage))
         else:
             os.rename(image, newImage)
