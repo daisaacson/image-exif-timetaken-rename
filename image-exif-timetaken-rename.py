@@ -94,11 +94,12 @@ def GetNewImageName(image, prefix, append):
 #%%
 def main(args):
     for image in args:
-        if options.verbose: print("Intput file: %s" % image) 
+        if options.verbose: print("Input file: %s" % image) 
         newImage = GetNewImageName(image, options.prefix, options.append)
-        if options.dry or options.verbose:
+        if options.dry:
             print("%s --> %s" % (image, newImage))
         else:
+            if options.verbose: print("Output file: %s" % newImage)
             os.rename(image, newImage)
 #%%
 
