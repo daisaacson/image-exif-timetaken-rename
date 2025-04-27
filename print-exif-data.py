@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import sys, time
-from PIL import Image
+from PIL import Image, ImageFilter
 import piexif
+from pillow_heif import HeifImagePlugin
 
 fn = sys.argv[1]
 

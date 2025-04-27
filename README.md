@@ -1,9 +1,9 @@
 ## Prep
 
 ```bash
-sudo apt install python3-pip python3-dateutil python3-pil ffmpeg
-pip install --upgrade pip
-pip install piexif pyheif ffmpeg ffmpeg-python
+sudo apt install python3-pip python3-dateutil ffmpeg
+pip3 install --upgrade pip
+pip3 install pillow-heif piexif ffmpeg ffmpeg-python
 ```
 
 Rename Images and Movies based on time media was created

@@ -4,10 +4,9 @@ import os, sys, time, datetime, pathlib
 from dateutil.relativedelta import relativedelta
 from optparse import OptionParser, OptionGroup
 # Image files
-from PIL import Image
-# HEIC files from Apple Phones 
+from PIL import Image, ImageFilter
+from pillow_heif import HeifImagePlugin
 import piexif
-import pyheif
 # Video files
 import ffmpeg
 
@@ -16,13 +15,6 @@ __version__ = '0.1'
 #%%
 def GetImageDate(fn):
     try:
-        if pathlib.Path(fn).suffix.lower() == '.heic':
-            if options.verbose: print("Input file is HEIC: %s" % fn) 
-            heif = pyheif.read_heif(fn)
-            for m in heif.metadata or []:
-                if m['type'] == 'Exif':
-                    heif_meta = piexif.load(m['data'])
-            return time.strptime(heif_meta['0th'][306].decode('utf-8'),"%Y:%m:%d %H:%M:%S")
         if pathlib.Path(fn).suffix.lower() == '.mov' or pathlib.Path(fn).suffix.lower() == '.mp4':
             if options.verbose: print("Input file is vidio: %s" % fn)
             probe = ffmpeg.probe(fn)
@@ -36,7 +28,12 @@ def GetImageDate(fn):
                 print("GMT Time %s" % str(g))
                 print("CDT Time %s" % str(c))
             return video_time
-        return time.strptime(Image.open(fn)._getexif()[36867],"%Y:%m:%d %H:%M:%S")
+        img = Image.open(fn)
+        exif = piexif.load(img.info["exif"])
+        dateTimeOriginal = exif["Exif"][36867].decode('utf-8')
+        if options.debug:
+            print(dateTimeOriginal)
+        return time.strptime(dateTimeOriginal,"%Y:%m:%d %H:%M:%S")
     except IOError:
         print ("File %s not found" % fn)
     #except TypeError:
