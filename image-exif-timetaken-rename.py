@@ -16,7 +16,7 @@ __version__ = '0.1'
 def GetImageDate(fn):
     try:
         if pathlib.Path(fn).suffix.lower() == '.mov' or pathlib.Path(fn).suffix.lower() == '.mp4':
-            if options.verbose: print("Input file is vidio: %s" % fn)
+            if options.verbose: print("Input file is video: %s" % fn)
             probe = ffmpeg.probe(fn)
             video_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'video'), None)
             creation_time = video_stream['tags']['creation_time'] + "GMT"
