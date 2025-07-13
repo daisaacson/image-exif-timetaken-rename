@@ -1,7 +1,19 @@
 ## Prep
 
+### Debian
+
 ```bash
 sudo apt install python3-pip python3-dateutil ffmpeg
+```
+
+### Fedora-Toolbox
+
+```bash
+sudo dnf install python3-dateutil ffmpeg
+```
+
+### Python
+```bash
 pip3 install --upgrade pip
 pip3 install pillow-heif piexif ffmpeg ffmpeg-python
 ```
