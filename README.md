@@ -57,6 +57,10 @@ Renames files
 * Kid_20230801-12:30:01-0 (2 Years) Some Activity.jpg
 * Kid_20230801-12:30:02-0 (2 Years) Some Activity.jpg
 
+```bash
+date=2025:07:01; kid="Kiddo"; bdate="2020-01-01"; i=100; for p in a.jpg b.jpg c.jpg; do ~/git/image-exif-timetaken-rename/add-exif.py $p "${date} 12:30:${i:1:2}" && rm $p; ~/git/image-exif-timetaken-rename/image-exif-timetaken-rename.py -c ${bdate} -p ${kid}_ -a ' Day Care' new_${p}; i=$((i+1)); done
+```
+
 ## fix-exif.py
 
 Originally add-exif.py only added one DateTime tag
