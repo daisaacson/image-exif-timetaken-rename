@@ -42,17 +42,3 @@ foreach ($file in $files) {
     	throw
 	}
 }
-
-## LINUX
-## All images are not oriented correctly
-## sudo apt-get install libheif1 libheif-examples
-#newParentPath="$HOME/d/Family"
-#find . -name "*.heic" | while read i; do 
-#	echo "$i"
-#	fileHash=$(sha256sum "$i" | cut -f1 -d' ')
-#	baseName=$(basename "${i}")
-#	newFileName="${newParentPath}/${fileHash:0:2}/${fileHash:0:8}_${baseName}.jpg"
-#	if [ ! -f "$newFileName" ]; then
-#		heif-convert "${i}" "${newFileName}"
-#	fi
-#done
