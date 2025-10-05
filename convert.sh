@@ -41,12 +41,9 @@ echo "${srcFilesPath}" | while IFS= read -r srcFilePath; do
                 echo "copy ${srcFilePath}"
                 cp "${srcFilePath}" "${dstFilePath}"
                 ;;
-            *.jpg|*.jpeg|*.png)
+            *.jpg|*.jpeg|*.png|*.heic)
                 echo "xvrt ${srcFilePath}"
                 magick -quality 92% -define jpeg:extent=512kb "${srcFilePath}" "${dstFilePath}"
-                ;;
-            *.heic)
-                echo "todo convert heic ${srcFilePath}"
                 ;;
             *)
                 echo "skip ${srcFilePath}"
