@@ -11,9 +11,9 @@ print ("Filename: %s"%(fn))
 img = Image.open(fn)
 try:
     exif_dict = piexif.load(img.info["exif"])
-    exif_dict["0th"][306] = bytes(taken,"UTF-8")
-    exif_dict["Exif"][36867] = bytes(taken,"UTF-8")
-    exif_dict["Exif"][36868] = bytes(taken,"UTF-8")
+    exif_dict["0th"][306] = bytes(taken,"UTF-8")    # DateTime
+    exif_dict["Exif"][36867] = bytes(taken,"UTF-8") # DateTimeOriginal
+    exif_dict["Exif"][36868] = bytes(taken,"UTF-8") # DateTimeDigitized
     exif_bytes = piexif.dump(exif_dict)
     img.save("new_" + fn, quality=100, subsampling=0, exif=exif_bytes)
 except KeyError:
