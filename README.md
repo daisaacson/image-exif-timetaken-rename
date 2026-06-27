@@ -9,7 +9,7 @@ sudo apt install python3-pip python3-dateutil ffmpeg
 ### Fedora-Toolbox
 
 ```bash
-sudo dnf install python3-dateutil ffmpeg
+sudo dnf install python3-dateutil python3-pip ffmpeg
 ```
 
 ### Python
