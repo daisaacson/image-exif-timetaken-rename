@@ -20,7 +20,7 @@ FILES=("$@")
 
 i=100
 for file in "${FILES[@]}"; do
-  ~/git/image-exif-timetaken-rename/add-exif.py ${file} "${DATE} ${TIME}:${i:1:2}" && rm ${file}
-  ~/git/image-exif-timetaken-rename/image-exif-timetaken-rename.py -c ${BIRTH_DATE} -p ${KID}_ -a " ${COMMENT}" new_${file}
+  ~/git/image-exif-timetaken-rename/add-exif.py ${file} "${DATE} ${TIME}:${i:1:2}" >/dev/null && rm ${file}
+  ~/git/image-exif-timetaken-rename/image-exif-timetaken-rename.py -c ${BIRTH_DATE} -p ${KID}_ -a " ${COMMENT}" new_${file} >/dev/null
   i=$((i+1))
 done
